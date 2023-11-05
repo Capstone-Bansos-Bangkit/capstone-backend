@@ -4,20 +4,31 @@ import AutoLoad from "@fastify/autoload";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUI from "@fastify/swagger-ui";
 import Cors from "@fastify/cors";
+import FastifyPG from "@fastify/postgres";
+import Sensible from "@fastify/sensible";
+
 import path from "path";
 import { serializerCompiler, validatorCompiler, jsonSchemaTransform } from "fastify-type-provider-zod";
+
+import dotenv from "dotenv";
+dotenv.config();
 
 const server = fastify({
     maxParamLength: 5000,
 });
 
 async function main() {
+    server.register(FastifyPG, {
+        connectionString: process.env.DATABASE_URL,
+    });
+
     server.setValidatorCompiler(validatorCompiler);
     server.setSerializerCompiler(serializerCompiler);
 
-    await server.register(Cors);
+    server.register(Cors);
+    server.register(Sensible);
 
-    await server.register(fastifySwagger, {
+    server.register(fastifySwagger, {
         openapi: {
             info: {
                 title: "capstone",
@@ -30,12 +41,12 @@ async function main() {
         mode: "dynamic",
     });
 
-    await server.register(fastifySwaggerUI, {
+    server.register(fastifySwaggerUI, {
         routePrefix: "/",
     });
 
     // Routes
-    await server.register(AutoLoad, {
+    server.register(AutoLoad, {
         dir: path.join(__dirname, "routes"),
         ignorePattern: /_.*\.ts$/,
         dirNameRoutePrefix: false,
