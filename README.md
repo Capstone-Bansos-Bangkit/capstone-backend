@@ -7,16 +7,20 @@
 
 ## Getting Started
 
+You might need to setup auth for git first. This [post](https://stackoverflow.com/questions/2505096/clone-a-private-repository-github) might help.
+
+https://stackoverflow.com/questions/2505096/clone-a-private-repository-github
+
 -   ### Clone the repository
 
     ```
-    git clone <repo_url>
+    git clone https://github.com/Capstone-Bansos-Bangkit/capstone-backend.git
     ```
 
 -   ### Navigate to the project directory
 
     ```
-    cd <project_name>
+    cd capstone-backend
     ```
 
 -   ### Install dependencies
