@@ -24,11 +24,12 @@ jobs:
               id: deploy
               uses: google-github-actions/deploy-appengine@v0.2.0
               with:
+                  env_vars: |-
+                      DATABASE_URL=${{ secrets.DATABASE_URL }}
                   deliverables: app.yaml
                   version: v1
                   project_id: ${{ secrets.GCP_PROJECT }}
                   credentials: ${{ secrets.GCP_CREDENTIALS }}
-                  DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
             - name: Test
               run: curl "${{ steps.deploy.outputs.url }}"
