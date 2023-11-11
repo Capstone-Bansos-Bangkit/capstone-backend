@@ -20,12 +20,16 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v2
 
+            - name: Generate .env file
+              id: generate_dotenv_file
+              env:
+                  DOTENV_FILE: ${{ secrets.DOTENV_FILE }}
+              run: echo "$DOTENV_FILE" > .env
+
             - name: Deploy to App Engine
               id: deploy
               uses: google-github-actions/deploy-appengine@v0.2.0
               with:
-                  env_vars: |-
-                      DATABASE_URL=${{ secrets.DATABASE_URL }}
                   deliverables: app.yaml
                   version: v1
                   project_id: ${{ secrets.GCP_PROJECT }}
