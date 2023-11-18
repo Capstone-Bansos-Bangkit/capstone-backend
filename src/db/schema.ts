@@ -57,3 +57,11 @@ export const attachment = pgTable('attachment', {
     path: text('path'),
     data: jsonb('data'),
 })
+
+export const question = pgTable('question', {
+    id: serial('id').primaryKey(),
+    alias: text('alias'),
+    question: text('question'),
+    created_at: timestamp('created_at').defaultNow(),
+    updated_at: timestamp('updated_at').defaultNow(),
+})

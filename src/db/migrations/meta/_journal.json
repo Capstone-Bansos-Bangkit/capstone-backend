@@ -29,6 +29,13 @@
       "when": 1700306633867,
       "tag": "0003_motionless_jackal",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1700316684859,
+      "tag": "0004_skinny_richard_fisk",
+      "breakpoints": true
     }
   ]
 }
