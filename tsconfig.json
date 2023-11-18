@@ -9,7 +9,9 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "baseUrl": "./src",
-        "rootDir": "./src"
+        "rootDir": "./src",
+        "noImplicitAny": false,
+        "typeRoots": ["src/@types"]
     },
     "exclude": ["drizzle.config.ts"],
     "ts-node": {
