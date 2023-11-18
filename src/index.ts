@@ -5,11 +5,14 @@ import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUI from "@fastify/swagger-ui";
 import Cors from "@fastify/cors";
 import Sensible from "@fastify/sensible";
+import JWT from "@fastify/jwt";
 
 import { db, initDatabase } from "./db/database";
+import { swaggerTheme } from "assets/swagger";
 
 import path from "path";
 import { serializerCompiler, validatorCompiler, jsonSchemaTransform } from "fastify-type-provider-zod";
+import { ZodError } from "zod";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -23,18 +26,57 @@ async function main() {
 
     server.setValidatorCompiler(validatorCompiler);
     server.setSerializerCompiler(serializerCompiler);
+    server.setErrorHandler((error, request, reply) => {
+        if (error instanceof ZodError) {
+            reply.status(400).send({
+                statusCode: 400,
+                error: "Bad Request",
+                issues: error.issues,
+            });
+            return;
+        }
+
+        reply.send(error);
+    });
 
     server.register(Cors);
     server.register(Sensible);
+    server.register(JWT, {
+        secret: process.env.JWT_SECRET as string,
+        sign: {
+            expiresIn: "365d",
+        },
+    });
+
+    server.decorate("authenticate", async function (request: any, reply: any) {
+        try {
+            await request.jwtVerify();
+        } catch (err) {
+            reply.send(err);
+        }
+    });
 
     server.register(fastifySwagger, {
         openapi: {
             info: {
-                title: "capstone",
+                title: "Capstone REST API",
                 description: "Capstone Project API",
                 version: "0.0.1",
             },
             servers: [],
+            components: {
+                securitySchemes: {
+                    Bearer: {
+                        type: "http",
+                        scheme: "bearer",
+                    },
+                },
+            },
+            tags: [
+                { name: "example", description: "contoh route" },
+                { name: "login", description: "Login user" },
+                { name: "user", description: "User related API" },
+            ],
         },
         transform: jsonSchemaTransform,
         mode: "dynamic",
@@ -42,6 +84,15 @@ async function main() {
 
     server.register(fastifySwaggerUI, {
         routePrefix: "/",
+        theme: {
+            title: "Capstone Project API",
+            css: [
+                {
+                    filename: "theme.css",
+                    content: swaggerTheme,
+                },
+            ],
+        },
     });
 
     // Routes
