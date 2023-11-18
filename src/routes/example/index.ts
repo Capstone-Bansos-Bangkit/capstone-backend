@@ -1,5 +1,9 @@
 import { FastifyInstance } from "fastify";
 
+import { sql } from "drizzle-orm";
+import { db } from "db/database";
+import { user } from "db/schema";
+
 import { z } from "zod";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 
@@ -26,27 +30,13 @@ export default async function route(fastify: FastifyInstance) {
             },
         },
         handler: async (request, reply) => {
-            // Contoh penggunaan database
-            const client = await fastify.pg.connect();
-            let queryResult;
-            try {
-                const { rows } = await client.query("SELECT NOW()");
-                queryResult = rows[0];
-            } catch {
-                // setiap membuka koneksi pakai `fastify.pg.connect()`
-                // harus di release setelah selesai, baik ketika API berhasil atau error
-                client.release();
-                return reply.internalServerError();
-            }
-            client.release();
-
-            // Contoh menggunakan data dari request
-            const { name } = request.query;
+            const queryResult: { now: string }[] = await db.execute(sql`select now()`);
+            const name = request.query.name;
 
             return {
                 result: {
                     message: `Hello, ${name}!`,
-                    date: queryResult,
+                    date: queryResult[0].now,
                 },
             };
         },

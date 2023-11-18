@@ -4,8 +4,9 @@ import AutoLoad from "@fastify/autoload";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUI from "@fastify/swagger-ui";
 import Cors from "@fastify/cors";
-import FastifyPG from "@fastify/postgres";
 import Sensible from "@fastify/sensible";
+
+import { db, initDatabase } from "./db/database";
 
 import path from "path";
 import { serializerCompiler, validatorCompiler, jsonSchemaTransform } from "fastify-type-provider-zod";
@@ -18,9 +19,7 @@ const server = fastify({
 });
 
 async function main() {
-    server.register(FastifyPG, {
-        connectionString: process.env.DATABASE_URL,
-    });
+    await initDatabase();
 
     server.setValidatorCompiler(validatorCompiler);
     server.setSerializerCompiler(serializerCompiler);
