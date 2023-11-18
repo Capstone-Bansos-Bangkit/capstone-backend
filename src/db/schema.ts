@@ -1,4 +1,4 @@
-import { integer, pgEnum, pgTable, serial, uniqueIndex, varchar, text, date, boolean, primaryKey, jsonb } from "drizzle-orm/pg-core";
+import { integer, pgEnum, pgTable, serial, uniqueIndex, varchar, text, date, boolean, primaryKey, jsonb, timestamp } from "drizzle-orm/pg-core";
 
 export const user = pgTable('users', {
     nik: text('nik').primaryKey(),
@@ -8,8 +8,8 @@ export const user = pgTable('users', {
     address: text('address'),
     phone_number: text('phone_number'),
     email: text('email'),
-    created_at: date('created_at').defaultNow(),
-    updated_at: date('updated_at').defaultNow(),
+    created_at: timestamp('created_at').defaultNow(),
+    updated_at: timestamp('updated_at').defaultNow(),
 });
 
 export const admin = pgTable('admins', {
@@ -20,8 +20,8 @@ export const admin = pgTable('admins', {
 
 export const user_information = pgTable('user_information', {
     nik: text('nik').references(() => user.nik),
-    created_at: date('created_at').defaultNow(),
-    updated_at: date('updated_at').defaultNow(),
+    created_at: timestamp('created_at').defaultNow(),
+    updated_at: timestamp('updated_at').defaultNow(),
     // TODO: add columns
     salary: integer('salary'),
 });
@@ -33,16 +33,16 @@ export const aid_event = pgTable('aid_event', {
     address: text('address'),
     start_date: date('start_date'),
     end_date: date('end_date'),
-    created_at: date('created_at').defaultNow(),
-    updated_at: date('updated_at').defaultNow(),
+    created_at: timestamp('created_at').defaultNow(),
+    updated_at: timestamp('updated_at').defaultNow(),
 });
 
 export const user_information_submission = pgTable('user_information_submission', {
     nik: text('nik').references(() => user.nik),
     aid_id: integer('aid_id').references(() => aid_event.id),
     verified: boolean('verified').default(false),
-    created_at: date('created_at').defaultNow(),
-    updated_at: date('updated_at').defaultNow(),
+    created_at: timestamp('created_at').defaultNow(),
+    updated_at: timestamp('updated_at').defaultNow(),
     // TODO: add columns    
     salary: integer('salary'),
 }, (table) => {
