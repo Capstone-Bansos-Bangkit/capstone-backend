@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "db:generate": "npx drizzle-kit generate:pg",
-        "db:migrate": "ts-node ./db/migrate.ts",
+        "db:migrate": "ts-node ./src/db/migrate.ts",
         "dev": "nodemon src/index.ts",
         "build": "tsc",
         "start": "node dist/index.js"

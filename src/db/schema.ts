@@ -1,4 +1,4 @@
-import { integer, pgEnum, pgTable, serial, uniqueIndex, varchar, text, date, boolean, primaryKey } from "drizzle-orm/pg-core";
+import { integer, pgEnum, pgTable, serial, uniqueIndex, varchar, text, date, boolean, primaryKey, jsonb } from "drizzle-orm/pg-core";
 
 export const user = pgTable('users', {
     nik: text('nik').primaryKey(),
@@ -51,3 +51,9 @@ export const user_information_submission = pgTable('user_information_submission'
     }
 });
 
+export const attachment = pgTable('attachment', {
+    id: serial('id').primaryKey(),
+    type: text('type'),
+    path: text('path'),
+    data: jsonb('data'),
+})

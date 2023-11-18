@@ -1,0 +1,1 @@
+ALTER TABLE "dummy" RENAME TO "attachment";
