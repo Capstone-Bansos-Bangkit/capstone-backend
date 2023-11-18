@@ -24,6 +24,7 @@ export default async function route(fastify: FastifyInstance) {
         method: "GET",
         url: "/path",
         schema: {
+            tags: ["example"],
             querystring: requestSchema,
             response: {
                 "2xx": responseSchema,
