@@ -2,8 +2,8 @@ import { FastifyInstance } from "fastify";
 
 import * as d from "drizzle-orm";
 import { sql, and, eq } from "drizzle-orm";
-import { db } from "db/database";
-import { user } from "db/schema";
+import { db } from "@db/database";
+import { user } from "@db/schema";
 import dayjs from "dayjs";
 
 import { z } from "zod";

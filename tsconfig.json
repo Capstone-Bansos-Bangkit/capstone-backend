@@ -8,10 +8,12 @@
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
-        "baseUrl": "./src",
-        "rootDir": "./src",
+        "baseUrl": "./",
         "noImplicitAny": false,
-        "typeRoots": ["src/@types"]
+        "typeRoots": ["src/@types"],
+        "paths": {
+            "@db/*": ["src/db/*"]
+        }
     },
     "exclude": ["drizzle.config.ts"],
     "ts-node": {

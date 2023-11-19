@@ -1,8 +1,8 @@
 import { FastifyInstance } from "fastify";
 
 import { sql } from "drizzle-orm";
-import { db } from "db/database";
-import { user } from "db/schema";
+import { db } from "@db/database";
+import { user } from "@db/schema";
 
 import { z } from "zod";
 import { ZodTypeProvider } from "fastify-type-provider-zod";

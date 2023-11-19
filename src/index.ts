@@ -7,8 +7,8 @@ import Cors from "@fastify/cors";
 import Sensible from "@fastify/sensible";
 import JWT from "@fastify/jwt";
 
-import { db, initDatabase } from "./db/database";
-import { swaggerTheme } from "assets/swagger";
+import { db, initDatabase } from "@db/database";
+import { swaggerTheme } from "./assets/swagger";
 
 import path from "path";
 import { serializerCompiler, validatorCompiler, jsonSchemaTransform } from "fastify-type-provider-zod";
@@ -117,3 +117,5 @@ try {
 }
 
 export { server };
+
+export const viteNodeApp = server;

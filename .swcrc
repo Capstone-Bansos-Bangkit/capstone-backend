@@ -1,0 +1,18 @@
+{
+    "$schema": "https://json.schemastore.org/swcrc",
+    "sourceMaps": false,
+    "minify": false,
+    "module": {
+        "type": "commonjs"
+    },
+    "jsc": {
+        "parser": {
+            "syntax": "typescript"
+        },
+        "baseUrl": "./",
+        "paths": {
+            "@db/*": ["src/db/*"]
+        },
+        "target": "esnext"
+    }
+}
