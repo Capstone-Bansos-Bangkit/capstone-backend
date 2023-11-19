@@ -3,9 +3,8 @@ name: Deploy to App Engine
 # Controls when the workflow will run
 on:
     push:
-        branches: [main]
-    pull_request:
-        branches: [main]
+        tags:
+            - "v*.*.*"
 
     # Allows you to run this workflow manually from the Actions tab
     workflow_dispatch:
