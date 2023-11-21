@@ -1,0 +1,1 @@
+ALTER TABLE "question_choice" RENAME COLUMN "value" TO "alias";

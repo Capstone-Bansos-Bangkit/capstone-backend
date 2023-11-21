@@ -1,0 +1,1 @@
+ALTER TABLE "user_information_submission" DROP CONSTRAINT "user_information_submission_nik_aid_id";
