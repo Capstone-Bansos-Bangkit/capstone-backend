@@ -18,14 +18,6 @@ export const admin = pgTable('admins', {
     password_hash: text('password_hash').notNull(),
 });
 
-export const user_information = pgTable('user_information', {
-    nik: text('nik').references(() => user.nik),
-    created_at: timestamp('created_at').defaultNow(),
-    updated_at: timestamp('updated_at').defaultNow(),
-    // TODO: add columns
-    salary: integer('salary'),
-});
-
 export const aid_event = pgTable('aid_event', {
     id: serial('id').primaryKey(),
     name: text('name'),
@@ -37,17 +29,33 @@ export const aid_event = pgTable('aid_event', {
     updated_at: timestamp('updated_at').defaultNow(),
 });
 
-export const user_information_submission = pgTable('user_information_submission', {
+export const user_answer = pgTable('user_answer', {
     nik: text('nik').references(() => user.nik),
-    aid_id: integer('aid_id').references(() => aid_event.id),
-    verified: boolean('verified').default(false),
+    question_id: text('question_id').references(() => question.id),
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp('updated_at').defaultNow(),
-    // TODO: add columns    
-    salary: integer('salary'),
+    answer: text('answer'),
 }, (table) => {
     return {
-        pk: primaryKey({columns:[table.nik, table.aid_id]}),
+        pk: primaryKey({columns:[table.nik, table.question_id]}),
+    }
+});
+
+export const user_submission = pgTable('user_submission', {
+    id: serial('id').primaryKey(),
+    nik: text('nik').references(() => user.nik),
+    aid_id: integer('aid_id').references(() => aid_event.id),
+    created_at: timestamp('created_at').defaultNow(),
+    updated_at: timestamp('updated_at').defaultNow(),
+});
+
+export const user_submission_answer = pgTable('user_submission_answer', {
+    user_submission_id: integer('user_submission_id').references(() => user_submission.id),
+    question_id: text('question_id').references(() => question.id),
+    answer: integer('answer'),
+}, (table) => {
+    return {
+        pk: primaryKey({columns:[table.user_submission_id, table.question_id]}),
     }
 });
 
@@ -59,9 +67,13 @@ export const attachment = pgTable('attachment', {
 })
 
 export const question = pgTable('question', {
-    id: serial('id').primaryKey(),
-    alias: text('alias'),
+    id: text('id').primaryKey(),
     question: text('question'),
-    created_at: timestamp('created_at').defaultNow(),
-    updated_at: timestamp('updated_at').defaultNow(),
+})
+
+export const question_choice = pgTable('question_choice', {
+    id: serial('id').primaryKey(),
+    question_id: text('question_id').references(() => question.id),
+    value: integer('value'),
+    alias: text('alias'),
 })
