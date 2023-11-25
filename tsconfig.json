@@ -15,8 +15,5 @@
             "@db/*": ["src/db/*"]
         }
     },
-    "exclude": ["drizzle.config.ts"],
-    "ts-node": {
-        "require": ["tsconfig-paths/register"]
-    }
+    "exclude": ["drizzle.config.ts"]
 }
