@@ -6,6 +6,7 @@ import fastifySwaggerUI from "@fastify/swagger-ui";
 import Cors from "@fastify/cors";
 import Sensible from "@fastify/sensible";
 import JWT from "@fastify/jwt";
+import FormBody from "@fastify/formbody";
 
 import { db, initDatabase } from "@db/database";
 import { swaggerTheme } from "./assets/swagger";
@@ -39,6 +40,7 @@ async function main() {
         reply.send(error);
     });
 
+    server.register(FormBody);
     server.register(Cors);
     server.register(Sensible);
     server.register(JWT, {
