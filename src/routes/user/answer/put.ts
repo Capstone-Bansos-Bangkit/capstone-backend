@@ -1,4 +1,4 @@
-import { FastifyInstance } from "fastify";
+/* import { FastifyInstance } from "fastify";
 
 import * as d from "drizzle-orm";
 import { sql } from "drizzle-orm";
@@ -86,3 +86,4 @@ export default async function route(fastify: FastifyInstance) {
         },
     });
 }
+ */
