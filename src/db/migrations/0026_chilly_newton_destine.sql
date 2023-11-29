@@ -1,0 +1,1 @@
+ALTER TABLE "user_submission_answer" ALTER COLUMN "answer" SET DATA TYPE text;

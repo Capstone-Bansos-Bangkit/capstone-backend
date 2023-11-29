@@ -148,6 +148,83 @@
       "when": 1700568965853,
       "tag": "0020_glamorous_white_tiger",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "5",
+      "when": 1701269505582,
+      "tag": "0021_flaky_mystique",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "5",
+      "when": 1701269538773,
+      "tag": "0022_grey_colonel_america",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "5",
+      "when": 1701269584729,
+      "tag": "0023_clumsy_ultimatum",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "5",
+      "when": 1701269682698,
+      "tag": "0024_lonely_omega_sentinel",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "5",
+      "when": 1701269808771,
+      "tag": "0025_cool_cobalt_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "5",
+      "when": 1701269844298,
+      "tag": "0026_chilly_newton_destine",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "5",
+      "when": 1701269894186,
+      "tag": "0027_illegal_mystique",
+      "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "5",
+      "when": 1701270312106,
+      "tag": "0028_lovely_rocket_raccoon",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "5",
+      "when": 1701270537405,
+      "tag": "0029_clumsy_the_twelve",
+      "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "5",
+      "when": 1701270716254,
+      "tag": "0030_flashy_richard_fisk",
+      "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "5",
+      "when": 1701270904585,
+      "tag": "0031_gifted_ben_parker",
+      "breakpoints": true
     }
   ]
 }
