@@ -74,7 +74,7 @@ async function main() {
             info: {
                 title: "Capstone REST API",
                 description: "Capstone Project API",
-                version: "0.1.4",
+                version: "0.1.5",
             },
             servers: [],
             components: {
