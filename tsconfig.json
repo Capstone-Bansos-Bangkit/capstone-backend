@@ -12,7 +12,8 @@
         "noImplicitAny": false,
         "typeRoots": ["src/@types"],
         "paths": {
-            "@db/*": ["src/db/*"]
+            "@db/*": ["src/db/*"],
+            "@lib/*": ["src/lib/*"]
         }
     },
     "exclude": ["drizzle.config.ts"]

@@ -10,21 +10,32 @@ import FormBody from "@fastify/formbody";
 
 import { db, initDatabase } from "@db/database";
 import { swaggerTheme } from "./assets/swagger";
-
 import path from "path";
 import { serializerCompiler, validatorCompiler, jsonSchemaTransform } from "fastify-type-provider-zod";
 import { ZodError } from "zod";
+
+import { customTransform } from "./lib/lib";
+import { initGcs } from "./lib/gcs";
+import FastifyFormidable, { ajvBinaryFormat } from "fastify-formidable";
 
 import dotenv from "dotenv";
 dotenv.config();
 
 const server = fastify({
     maxParamLength: 5000,
+    ajv: {
+        plugins: [ajvBinaryFormat],
+    },
 });
 
 async function main() {
     await initDatabase();
+    await initGcs();
 
+    server.register(FastifyFormidable, {
+        //addContentTypeParser: true,
+        formidable: {},
+    });
     server.setValidatorCompiler(validatorCompiler);
     server.setSerializerCompiler(serializerCompiler);
     server.setErrorHandler((error, request, reply) => {
@@ -63,7 +74,7 @@ async function main() {
             info: {
                 title: "Capstone REST API",
                 description: "Capstone Project API",
-                version: "0.0.1",
+                version: "0.1.4",
             },
             servers: [],
             components: {
@@ -78,9 +89,12 @@ async function main() {
                 { name: "example", description: "contoh route" },
                 { name: "login", description: "Login user" },
                 { name: "user", description: "User related API" },
+                { name: "submission", description: "Submission related API" },
+                { name: "attachment", description: "Upload berbagai macam file" },
             ],
         },
-        transform: jsonSchemaTransform,
+        //transform: jsonSchemaTransform,
+        transform: customTransform,
         mode: "dynamic",
     });
 
