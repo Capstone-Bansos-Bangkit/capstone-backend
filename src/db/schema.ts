@@ -60,9 +60,10 @@ export const user_submission_answer = pgTable('user_submission_answer', {
 
 export const attachment = pgTable('attachment', {
     id: serial('id').primaryKey(),
-    type: text('type'),
+    mime_type: text('mime_type'),
     path: text('path'),
     data: jsonb('data'),
+    created_at: timestamp('created_at').defaultNow(),
 })
 
 export const question = pgTable('question', {
