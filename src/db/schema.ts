@@ -71,7 +71,7 @@ export const attachment = pgTable('attachment', {
 export const question = pgTable('question', {
     id: text('id').primaryKey(),
     question: text('question'),
-    type: text('type'), // choice, file
+    type: text('type'), // choice, file, value
     is_required: boolean('is_required'),
 })
 
