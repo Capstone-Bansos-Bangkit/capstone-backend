@@ -65,7 +65,7 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
                 }
             }
 
-            const query = db
+            let query = db
                 .select({
                     nik: user.nik,
                     name: user.name,
@@ -77,41 +77,43 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
                     created_at: sql<string>`to_char(${user_submission.created_at}, 'DD-MM-YYYY HH24:MI:SS')`,
                 })
                 .from(user_submission)
+                .$dynamic()
                 .innerJoin(user, d.eq(user.nik, user_submission.nik))
                 .innerJoin(bansos_event, d.eq(bansos_event.id, user_submission.bansos_event_id))
                 .innerJoin(bansos_provider, d.eq(bansos_provider.id, bansos_event.bansos_provider_id));
 
-            const queryCount = db
+            let queryCount = db
                 .select({
                     total: sql<number>`cast(count(${user_submission.id}) as int)`,
                 })
                 .from(user_submission)
+                .$dynamic()
                 .innerJoin(user, d.eq(user.nik, user_submission.nik))
                 .innerJoin(bansos_event, d.eq(bansos_event.id, user_submission.bansos_event_id))
                 .innerJoin(bansos_provider, d.eq(bansos_provider.id, bansos_event.bansos_provider_id));
 
             if (request.query.nik) {
-                query.where(d.eq(user_submission.nik, request.query.nik));
-                queryCount.where(d.eq(user_submission.nik, request.query.nik));
+                query = query.where(d.eq(user_submission.nik, request.query.nik));
+                queryCount = queryCount.where(d.eq(user_submission.nik, request.query.nik));
             }
 
             if (request.query.bansos_provider_id) {
-                query.where(d.eq(bansos_provider.id, request.query.bansos_provider_id));
-                queryCount.where(d.eq(bansos_provider.id, request.query.bansos_provider_id));
+                query = query.where(d.eq(bansos_provider.id, request.query.bansos_provider_id));
+                queryCount = queryCount.where(d.eq(bansos_provider.id, request.query.bansos_provider_id));
             }
 
             if (request.query.bansos_event_id) {
-                query.where(d.eq(user_submission.bansos_event_id, request.query.bansos_event_id));
-                queryCount.where(d.eq(user_submission.bansos_event_id, request.query.bansos_event_id));
+                query = query.where(d.eq(user_submission.bansos_event_id, request.query.bansos_event_id));
+                queryCount = queryCount.where(d.eq(user_submission.bansos_event_id, request.query.bansos_event_id));
             }
 
             if (request.query.status) {
-                query.where(d.eq(user_submission.status, request.query.status));
-                queryCount.where(d.eq(user_submission.status, request.query.status));
+                query = query.where(d.eq(user_submission.status, request.query.status));
+                queryCount = queryCount.where(d.eq(user_submission.status, request.query.status));
             }
 
-            const result = await query.limit(request.query.limit).offset(request.query.offset).orderBy(d.desc(user_submission.created_at));
-            const total = await queryCount;
+            query = query.limit(request.query.limit).offset(request.query.offset).orderBy(d.desc(user_submission.created_at));
+            const [result, total] = await Promise.all([query, queryCount]);
 
             return reply.send({
                 message: "success",
