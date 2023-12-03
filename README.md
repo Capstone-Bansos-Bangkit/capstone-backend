@@ -2,8 +2,10 @@
 
 ## Pre-requisites
 
+-   Any PostgreSQL instance
 -   Node.js 18 or higher
 -   npm
+-   Google Cloud Credentials file (for Storage Bucket, and App Engine deployment)
 
 ## Getting Started
 
@@ -40,4 +42,8 @@
 
 ## Deployment
 
--   ### TODO
+This project is automatically deployed on the Google App Engine when a new tag is pushed to the repository. The tag must be in the format `vX.Y.Z`. For example, `v0.1.2`.
+
+We chose Google App Engine because it is easy to deploy for prototype project like this.
+
+For the database, we deployed it on Google Compute Engine.
