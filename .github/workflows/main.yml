@@ -25,6 +25,12 @@ jobs:
                   DOTENV_FILE: ${{ secrets.DOTENV_FILE }}
               run: echo "$DOTENV_FILE" > .env
 
+            - name: Generate cred.json file
+              id: generate_cred_file
+              env:
+                  CRED_FILE: ${{ secrets.GCP_CREDENTIALS }}
+              run: echo "$CRED_FILE" > cred.json
+
             - name: Deploy to App Engine
               id: deploy
               uses: google-github-actions/deploy-appengine@v0.2.0
