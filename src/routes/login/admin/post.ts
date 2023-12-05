@@ -3,18 +3,19 @@ import { FastifyInstance } from "fastify";
 import * as d from "drizzle-orm";
 import { sql, and, eq } from "drizzle-orm";
 import { db } from "@db/database";
-import { user } from "@db/schema";
+import { user, admin } from "@db/schema";
 import dayjs from "dayjs";
 
 import { z } from "zod";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 
+import bcrypt from "bcrypt";
+
 // Request and Response schema
-// const requestSchema = z.object({
-//     nik: z.string(),
-//     mother_name: z.string(),
-//     birth_date: z.coerce.date().describe("YYYY-MM-DD"),
-// });
+const requestSchema = z.object({
+    username: z.string(),
+    password: z.string(),
+});
 
 const responseSchema = z.object({
     message: z.string(),
@@ -22,9 +23,9 @@ const responseSchema = z.object({
         token: z.string(),
         payload: z.object({
             role: z.string(),
-            name: z.string(),
-            nik: z.string(),
-            birth_date: z.string(),
+            data: z.object({
+                username: z.string(),
+            }),
         }),
     }),
 });
@@ -32,41 +33,44 @@ const responseSchema = z.object({
 export default async function route(fastify: FastifyInstance) {
     fastify.withTypeProvider<ZodTypeProvider>().route({
         method: "POST",
-        url: "/login/dev_user",
+        url: "/login/admin",
         schema: {
+            description: "akun dummy -> username: admin, password: admin",
             tags: ["login"],
-            // querystring: requestSchema,
-            description: "Untuk login ketika develop, agar tidak perlu input nik, mother_name, birth_date",
+            querystring: requestSchema,
             response: {
                 "2xx": responseSchema,
             },
         },
         handler: async (request, reply) => {
-            const existing_user = await db
+            const existing_admin = await db
                 .select({
-                    name: user.name,
-                    nik: user.nik,
-                    birth_date: user.birth_date,
+                    username: admin.username,
+                    password_hash: admin.password_hash,
                 })
-                .from(user)
+                .from(admin)
                 .where(
                     sql`
-                        ${user.nik} = '3000000000000001' AND
-                        ${user.mother_name} = 'LESTARI IKA' AND
-                        ${user.birth_date} = '1997-12-22'
+                        ${admin.username} = ${request.query.username}
                     `
                 )
                 .limit(1);
 
-            if (existing_user.length == 0) {
-                return reply.notFound("No user match given information");
+            if (existing_admin.length == 0) {
+                return reply.notFound("No admin match given information");
+            }
+
+            const password_match = await bcrypt.compare(request.query.password, existing_admin[0].password_hash);
+
+            if (!password_match) {
+                return reply.badRequest("Password doesn't match");
             }
 
             const payload = {
-                role: "user",
-                name: existing_user[0].name,
-                nik: existing_user[0].nik,
-                birth_date: dayjs(existing_user[0].birth_date).format("YYYY-MM-DD"),
+                role: "admin",
+                data: {
+                    username: existing_admin[0].username,
+                },
             };
 
             const token = await reply.jwtSign(payload);

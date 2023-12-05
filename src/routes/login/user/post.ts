@@ -21,6 +21,7 @@ const responseSchema = z.object({
     result: z.object({
         token: z.string(),
         payload: z.object({
+            role: z.string(),
             name: z.string(),
             nik: z.string(),
             birth_date: z.string(),
@@ -61,10 +62,10 @@ export default async function route(fastify: FastifyInstance) {
             }
 
             const payload = {
+                role: "user",
                 name: existing_user[0].name,
                 nik: existing_user[0].nik,
                 birth_date: dayjs(existing_user[0].birth_date).format("YYYY-MM-DD"),
-                role: "user",
             };
 
             const token = await reply.jwtSign(payload);
