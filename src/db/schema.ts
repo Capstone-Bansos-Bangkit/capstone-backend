@@ -7,12 +7,14 @@ export const user = pgTable('users', {
     no_kk: text('no_kk').notNull(),
     name: text('name').notNull(),
     jenis_kelamin: text('jenis_kelamin').notNull(),
-    desa: text('desa'),
-    kecamatan: text('kecamatan'),
-    kabupaten: text('kabupaten'),
-    provinsi: text('provinsi'),
+    status_dalam_keluarga: text('status_dalam_keluarga'), // KEPALA KELUARGA, ISTRI, ANAK
+
+    alamat: text('alamat'),
+    desa_id: integer('desa_id').references(() => wilayah_desa.id),
+
     phone_number: text('phone_number'),
     email: text('email'),
+    
     created_at: timestamp('created_at').defaultNow(),
 });
 
