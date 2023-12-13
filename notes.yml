@@ -1,0 +1,150 @@
+List Kebutuhan Endpoint Page User:
+  - Login:
+    - POST /login/user
+  - Home:
+    - GET /bansos
+  - Cek Bansos:
+    - GET /bansos (list jenis bansos)
+    - GET /user/profile [NOT READY]
+    - GET /submission/latest_status (status pengajuan) [NOT READY]
+  - Pengajuan Bansos:
+    - GET /bansos (list jenis bansos)
+    - GET /user/profile [NOT READY]
+    - GET /submission/latest_status (status pengajuan) [NOT READY]
+    - POST /submission (hit ketika user milih jenis bansos) [NOT READY]
+    - PUT /submission/answer [NOT READY]
+    - GET /questioner
+    - POST /attachment
+    - PUT /submission/<submission_id>/submit [NOT READY]
+  - Profile Screen:
+    - GET /user/profile [NOT READY]
+    - PUT /user/profile [NOT READY]
+    - POST /attachment (upload image, ambil url dari responsenya, hit API PUT /user/profile)
+
+List Kebutuhan Endpoint Page Admin:
+  - Login:
+    - POST /login/admin
+  - Dashboard:
+    - GET /admin/submission/summary [NOT READY]
+    - GET /admin/submission/list [NOT READY]
+  - Verifikasi:
+    - GET /admin/submission/list [NOT READY]
+    - GET /bansos (list jenis bansos, utk filternya)
+    - GET /admin/submission/detail/<submission_id> [NOT READY]
+  - Bansos:
+    - Page Home & Data Bantuan Sosial: 
+      - GET /bansos (list jenis bansos) [NOT READY]
+    - Page Daftar Penerima:
+      - GET /bansos/event (list periode/event bansos)
+      - GET /wilayah/provinsi [NOT READY]
+      - GET /wilayah/kabupaten [NOT READY]
+      - GET /wilayah/kecamatan [NOT READY]
+      - GET /wilayah/desa [NOT READY]
+      - GET /admin/submission/list [NOT READY]
+    - Page Penyaluran:
+      - Nunggu mockup
+
+
+Notes BE Page User:
+  - GET /user/profile
+    - tambah data desa, kec, kab, prov
+    - tambah no kk dan alamat
+    - tambah kewarganegaraan (hardcode aja)
+    - tambah url foto profil
+  - PUT /user/profile
+    - tambah url foto profil
+  - GET /submission/latest_status
+    - implement
+    - request:
+      - bansos_provider_id: int
+    - response:
+      - submission_id: string (ambil yg latest)
+      - name: string
+      - age: int
+      - statuses: array
+        - bansos_name: string
+        - status: string
+        - periode: string
+  - POST /submission
+    - ubah param dari event_id ke tipe bansos, 
+      terus ambil event_id dari event terbaru jenis bansos tsb
+  - PUT /submission/answer
+    - ubah dari POST ke PUT
+  - GET /questioner
+    - perlu cek apakah sudah cukup (type question -> choice, continuous, image)
+  - PUT /submission/<submission_id>/submit
+    - implement
+
+Notes BE Page Admin:
+  - GET /bansos
+    - tambah total periode dan total penerima
+  - GET /admin/submission/summary
+    - implement
+    - param kosong
+    - response:
+      - total_keluarga_all: eligible + not eligible
+      - total_keluarga_eligible: eligible
+      - total_keluarga_not_eligible: not eligible
+      - per_bansos: array
+        - nama_bansos: string
+        - total_eligible: int
+  - GET /admin/submission/list
+    - implement
+    - order by date desc
+    - param:
+      - page: int
+      - limit: int
+      - status: string (all, eligible, not eligible)
+    - response:
+      - total: int
+      - data: array
+        - submission_id: string
+        - nik: string
+        - nama: string
+        - alamat: string
+        - nama_bansos: string
+  - GET /admin/submission/detail/<submission_id>
+    - implement
+    - response: nunggu mockup
+  - GET /wilayah/provinsi
+    - implement
+  - GET /wilayah/kabupaten
+    - implement
+  - GET /wilayah/kecamatan
+    - implement
+  - GET /wilayah/desa
+    - implement
+
+Keseluruhan yang belum ready:
+  - GET /admin/submission/detail/<submission_id>
+  - GET /admin/submission/list
+  - GET /admin/submission/summary
+  - GET /bansos
+  - GET /submission/latest_status
+  - GET /user/profile
+  - GET /wilayah/desa
+  - GET /wilayah/kabupaten
+  - GET /wilayah/kecamatan
+  - GET /wilayah/provinsi
+  - POST /submission
+  - PUT /submission/<submission_id>/submit
+  - PUT /submission/answer
+  - PUT /user/profile
+
+Belum implement:
+  - GET /admin/submission/detail/<submission_id>
+  - GET /admin/submission/list
+  - GET /admin/submission/summary
+  - GET /submission/latest_status
+  - PUT /submission/<submission_id>/submit
+  - GET /wilayah/desa
+  - GET /wilayah/kabupaten
+  - GET /wilayah/kecamatan
+  - GET /wilayah/provinsi
+
+Sudah implement tapi butuh perbaikan:
+  - GET /bansos
+  - GET /user/profile
+  - POST /submission
+  - PUT /submission/answer
+  - PUT /user/profile
