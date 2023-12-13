@@ -23,9 +23,7 @@ const responseSchema = z.object({
         token: z.string(),
         payload: z.object({
             role: z.string(),
-            data: z.object({
-                username: z.string(),
-            }),
+            name: z.string(),
         }),
     }),
 });
@@ -68,9 +66,7 @@ export default async function route(fastify: FastifyInstance) {
 
             const payload = {
                 role: "admin",
-                data: {
-                    username: existing_admin[0].username,
-                },
+                name: existing_admin[0].username,
             };
 
             const token = await reply.jwtSign(payload);

@@ -15,7 +15,7 @@ declare module 'fastify' {
 import "@fastify/jwt"
 
 type UserPayload = {
-  role: 'user',
+  role: 'user' | 'admin',
   name: string,
   nik: string,
   birth_date: string,
@@ -23,15 +23,9 @@ type UserPayload = {
   exp: number,
 }
 
-type AdminPayload = {
-  role: 'admin',
-  username: string,
-  iat: number,
-  exp: number,
-}
 
 declare module "@fastify/jwt" {
   interface FastifyJWT {
-    user: UserPayload | AdminPayload
+    user: UserPayload
   }
 }
