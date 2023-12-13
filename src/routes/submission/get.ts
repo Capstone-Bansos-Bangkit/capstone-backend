@@ -59,9 +59,8 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
         handler: async (request, reply) => {
             if (request.user.role !== "admin") {
                 if (request.query.nik !== request.user.nik) {
-                    // TODO: uncomment
-                    //reply.forbidden("Non-admin user can only access their own submission. Make sure your NIK is correct");
-                    //return;
+                    reply.forbidden("Non-admin user can only access their own submission. Make sure your NIK is correct");
+                    return;
                 }
             }
 

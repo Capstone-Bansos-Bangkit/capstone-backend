@@ -44,6 +44,11 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
             ],
         },
         handler: async (request, reply) => {
+            if (request.user.role !== "user") {
+                reply.forbidden("Only user can submit");
+                return;
+            }
+
             const nik = request.user.nik;
             const submission_id = request.query.submission_id;
             const question_id = request.query.question_id;

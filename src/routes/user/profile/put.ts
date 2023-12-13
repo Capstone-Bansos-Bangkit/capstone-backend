@@ -25,7 +25,6 @@ const putResponseSchema = z.object({
         address: z.string().nullish(),
         phone_number: z.string().nullish(),
         email: z.string().nullish(),
-        updated_at: z.date().nullish(),
     }),
 });
 
@@ -48,6 +47,11 @@ export default async function route(fastify: FastifyInstance) {
             ],
         },
         handler: async (request, reply) => {
+            if (request.user.role !== "user") {
+                reply.forbidden("Only user can submit");
+                return;
+            }
+
             const nik = request.user.nik;
             const name = request.query.name;
             const address = request.query.address;
@@ -59,10 +63,9 @@ export default async function route(fastify: FastifyInstance) {
                     name: user.name,
                     nik: user.nik,
                     birth_date: user.birth_date,
-                    address: user.address,
+                    address: user.alamat,
                     phone_number: user.phone_number,
                     email: user.email,
-                    updated_at: user.updated_at,
                 })
                 .from(user)
                 .where(d.eq(user.nik, nik));
@@ -76,7 +79,7 @@ export default async function route(fastify: FastifyInstance) {
                     .update(user)
                     .set({
                         name: name,
-                        address: address,
+                        alamat: address,
                         phone_number: phone_number,
                         email: email,
                     })
@@ -92,7 +95,6 @@ export default async function route(fastify: FastifyInstance) {
                     address: address ?? null,
                     phone_number: phone_number ?? null,
                     email: email ?? null,
-                    updated_at: userProfile[0].updated_at,
                 },
             };
         },

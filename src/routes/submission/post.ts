@@ -42,6 +42,11 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
             ],
         },
         handler: async (request, reply) => {
+            if (request.user.role !== "user") {
+                reply.forbidden("Only user can submit");
+                return;
+            }
+
             const bansosEvent = await db
                 .select({ id: bansos_event.id, bansos_name: bansos_provider.name })
                 .from(bansos_event)
