@@ -14,6 +14,7 @@ const putRequestSchema = z.object({
     address: z.string().optional(),
     phone_number: z.string().optional(),
     email: z.string().email().optional(),
+    profile_pic_url: z.string().optional(),
 });
 
 const putResponseSchema = z.object({
@@ -25,6 +26,7 @@ const putResponseSchema = z.object({
         address: z.string().nullish(),
         phone_number: z.string().nullish(),
         email: z.string().nullish(),
+        profile_pic_url: z.string().nullish(),
     }),
 });
 
@@ -57,6 +59,7 @@ export default async function route(fastify: FastifyInstance) {
             const address = request.query.address;
             const phone_number = request.query.phone_number;
             const email = request.query.email;
+            const profile_pic_url = request.query.profile_pic_url;
 
             const userProfile = await db
                 .select({
@@ -66,6 +69,7 @@ export default async function route(fastify: FastifyInstance) {
                     address: user.alamat,
                     phone_number: user.phone_number,
                     email: user.email,
+                    profile_pic_url: user.profile_pic_url
                 })
                 .from(user)
                 .where(d.eq(user.nik, nik));
@@ -82,6 +86,7 @@ export default async function route(fastify: FastifyInstance) {
                         alamat: address,
                         phone_number: phone_number,
                         email: email,
+                        profile_pic_url: profile_pic_url
                     })
                     .where(d.eq(user.nik, nik));
             }
@@ -95,6 +100,7 @@ export default async function route(fastify: FastifyInstance) {
                     address: address ?? null,
                     phone_number: phone_number ?? null,
                     email: email ?? null,
+                    profile_pic_url: profile_pic_url ?? null,
                 },
             };
         },

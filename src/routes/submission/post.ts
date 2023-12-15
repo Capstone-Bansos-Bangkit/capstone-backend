@@ -3,14 +3,14 @@ import { FastifyInstance } from "fastify";
 import * as d from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import { db } from "@db/database";
-import { user, bansos_event, user_submission, user_submission_answer, question, question_choice, attachment, bansos_provider } from "@db/schema";
+import { bansos_event, user_submission, bansos_provider } from "@db/schema";
 
 import { z } from "zod";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 
 // Request and Response schema
 const postRequestSchema = z.object({
-    bansos_event_id: z.coerce.number(),
+    bansos_id: z.coerce.number(),
 });
 
 const postResponseSchema = z.object({
@@ -51,7 +51,9 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
                 .select({ id: bansos_event.id, bansos_name: bansos_provider.name })
                 .from(bansos_event)
                 .innerJoin(bansos_provider, d.eq(bansos_provider.id, bansos_event.bansos_provider_id))
-                .where(d.eq(bansos_event.id, request.query.bansos_event_id));
+                .where(d.eq(bansos_provider.id, request.query.bansos_id))
+                .orderBy(sql`start_date DESC`)
+                .limit(1);
 
             if (bansosEvent.length === 0) {
                 reply.notFound("Bansos event not found");
@@ -61,7 +63,7 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
             const existingSubmission = await db
                 .select({ nik: user_submission.nik })
                 .from(user_submission)
-                .where(d.and(d.eq(user_submission.nik, request.user.nik), d.eq(user_submission.bansos_event_id, request.query.bansos_event_id)));
+                .where(d.and(d.eq(user_submission.nik, request.user.nik), d.eq(user_submission.bansos_event_id, bansosEvent[0].id)));
 
             if (existingSubmission.length > 0) {
                 reply.badRequest("Submission already exists");
@@ -72,7 +74,7 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
                 .insert(user_submission)
                 .values({
                     nik: request.user.nik,
-                    bansos_event_id: request.query.bansos_event_id,
+                    bansos_event_id: bansosEvent[0].id,
                     status: "pending",
                 })
                 .returning();
