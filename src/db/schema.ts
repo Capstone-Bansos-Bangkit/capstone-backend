@@ -9,6 +9,7 @@ export const user = pgTable('users', {
     jenis_kelamin: text('jenis_kelamin').notNull(),
     status_dalam_keluarga: text('status_dalam_keluarga'), // KEPALA KELUARGA, ISTRI, ANAK
 
+    profile_pic_url: text('profile_pic_url'),
     alamat: text('alamat'),
     desa_id: integer('desa_id').references(() => wilayah_desa.id),
 
