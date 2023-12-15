@@ -12,7 +12,7 @@ import { ZodTypeProvider } from "fastify-type-provider-zod";
 const postRequestSchema = z.object({
     submission_id: z.coerce.number(),
     question_id: z.string(),
-    answer: z.string().describe("id pilihan ganda, bilangan kontinu, atau id file (tergantung tipe question)"),
+    answer: z.string().describe("value dari pilihan ganda, bilangan kontinu, atau id file (tergantung tipe question)"),
 });
 
 const postResponseSchema = z.object({
@@ -27,12 +27,12 @@ const postResponseSchema = z.object({
 
 export default async function route(fastify: FastifyInstance, _opts: any, done: any) {
     fastify.withTypeProvider<ZodTypeProvider>().route({
-        method: "POST",
+        method: "PUT",
         url: "/submission/answer",
         onRequest: [fastify.authenticate],
         schema: {
             tags: ["submission"],
-            description: "post user answer",
+            description: "put user answer",
             querystring: postRequestSchema,
             response: {
                 "2xx": postResponseSchema,
@@ -79,16 +79,21 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
 
             const questionEntry = questions[0];
             if (questionEntry.type == "choice") {
-                const choice_id = parseInt(answer);
+                const choice_value = parseInt(answer);
                 const choices = await db
                     .select({
-                        id: question_choice.id,
+                        value: question_choice.value,
                     })
                     .from(question_choice)
-                    .where(d.eq(question_choice.value, choice_id));
+                    .where(d.eq(question_choice.question_id, question_id));
 
                 if (choices.length == 0) {
-                    return reply.notFound("Invalid choice id");
+                    return reply.notFound("Question has no choice. lapor ke aan tolong hehe");
+                }
+
+                const choices_values = choices.map((choice) => choice.value);
+                if (!choices_values.includes(choice_value)) {
+                    return reply.notFound("Invalid choice value! Valid choice values: " + choices_values.join(", "));
                 }
             } else if (questionEntry.type == "file") {
                 const file_id = parseInt(answer);
@@ -100,7 +105,7 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
                     .where(d.eq(attachment.id, file_id));
 
                 if (files.length == 0) {
-                    return reply.notFound("Invalid file id");
+                    return reply.notFound("File id not found");
                 }
             }
 
@@ -113,18 +118,38 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
                 .where(d.eq(user_submission.id, submission_id));
 
             if (userSubmission.length == 0) {
-                return reply.notFound("Invalid submission id");
+                return reply.notFound("Submission id not found");
             }
 
             if (userSubmission[0].nik != nik) {
                 return reply.forbidden("Forbidden");
             }
 
-            await db.insert(user_submission_answer).values({
-                user_submission_id: submission_id,
-                question_id: question_id,
-                answer: answer,
-            });
+            // check existing answer
+            const userSubmissionAnswer = await db
+                .select({
+                    question_id: user_submission_answer.question_id,
+                    user_submission_id: user_submission_answer.user_submission_id,
+                })
+                .from(user_submission_answer)
+                .where(d.and(d.eq(user_submission_answer.user_submission_id, submission_id), d.eq(user_submission_answer.question_id, question_id)));
+
+            if (userSubmissionAnswer.length == 0) {
+                await db.insert(user_submission_answer).values({
+                    user_submission_id: submission_id,
+                    question_id: question_id,
+                    answer: answer,
+                });
+            } else {
+                await db
+                    .update(user_submission_answer)
+                    .set({
+                        answer: answer,
+                    })
+                    .where(
+                        d.and(d.eq(user_submission_answer.user_submission_id, submission_id), d.eq(user_submission_answer.question_id, question_id))
+                    );
+            }
 
             return {
                 message: "success",
