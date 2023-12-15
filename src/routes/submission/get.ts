@@ -25,6 +25,7 @@ const postResponseSchema = z.object({
     message: z.string().default("success").optional(),
     result: z.array(
         z.object({
+            id: z.number(),
             nik: z.string(),
             name: z.string(),
             bansos_provider_id: z.number(),
@@ -66,6 +67,7 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
 
             let query = db
                 .select({
+                    id: user_submission.id,
                     nik: user.nik,
                     name: user.name,
                     bansos_provider_id: bansos_provider.id,

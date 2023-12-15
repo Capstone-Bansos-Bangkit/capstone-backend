@@ -75,7 +75,7 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
                 .values({
                     nik: request.user.nik,
                     bansos_event_id: bansosEvent[0].id,
-                    status: "pending",
+                    status: "unsubmitted",
                 })
                 .returning();
 
