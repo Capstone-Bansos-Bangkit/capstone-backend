@@ -16,6 +16,7 @@ const postRequestSchema = z.object({
 const postResponseSchema = z.object({
     message: z.string().default("success").optional(),
     result: z.object({
+        submission_id: z.number(),
         nik: z.string().nullish(),
         bansos_name: z.string().nullish(),
         bansos_event_id: z.number().nullish(),
@@ -82,6 +83,7 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
             return reply.send({
                 message: "success",
                 result: {
+                    submission_id: inserted[0].id,
                     nik: inserted[0].nik,
                     bansos_name: bansosEvent[0].bansos_name,
                     bansos_event_id: inserted[0].bansos_event_id,
