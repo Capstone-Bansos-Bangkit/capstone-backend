@@ -21,6 +21,7 @@ const responseSchema = z.object({
         nik: z.string(),
         no_kk: z.string(),
         alamat: z.string(),
+        kewarganegaraan: z.string(),
         desa: z.string(),
         kec: z.string(),
         kab: z.string(),
@@ -28,7 +29,7 @@ const responseSchema = z.object({
         birth_date: z.string(),
         phone_number: z.string().optional(),
         email: z.string().optional(),
-        profile_pic_url: z.string()
+        profile_pic_url: z.string(),
     }),
 });
 
@@ -65,7 +66,7 @@ export default async function route(fastify: FastifyInstance) {
                     birth_date: user.birth_date,
                     phone_number: user.phone_number,
                     email: user.email,
-                    profile_pic_url: user.profile_pic_url
+                    profile_pic_url: user.profile_pic_url,
                 })
                 .from(user)
                 .leftJoin(wilayah_desa, d.eq(wilayah_desa.id, user.desa_id))
@@ -85,6 +86,7 @@ export default async function route(fastify: FastifyInstance) {
                     nik: userProfile[0].nik,
                     no_kk: userProfile[0].no_kk,
                     alamat: userProfile[0].alamat,
+                    kewarganegaraan: "Warga Negara Indonesia",
                     desa: userProfile[0].desa,
                     kec: userProfile[0].kec,
                     kab: userProfile[0].kab,
