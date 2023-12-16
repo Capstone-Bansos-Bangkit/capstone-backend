@@ -10,7 +10,6 @@ import { z } from "zod";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 
 const putRequestSchema = z.object({
-    name: z.string().optional(),
     address: z.string().optional(),
     phone_number: z.string().optional(),
     email: z.string().email().optional(),
@@ -20,7 +19,6 @@ const putRequestSchema = z.object({
 const putResponseSchema = z.object({
     message: z.string().default("success").optional(),
     result: z.object({
-        name: z.string(),
         nik: z.string(),
         birth_date: z.string(),
         address: z.string().nullish(),
@@ -55,7 +53,6 @@ export default async function route(fastify: FastifyInstance) {
             }
 
             const nik = request.user.nik;
-            const name = request.query.name;
             const address = request.query.address;
             const phone_number = request.query.phone_number;
             const email = request.query.email;
@@ -63,13 +60,12 @@ export default async function route(fastify: FastifyInstance) {
 
             const userProfile = await db
                 .select({
-                    name: user.name,
                     nik: user.nik,
                     birth_date: user.birth_date,
                     address: user.alamat,
                     phone_number: user.phone_number,
                     email: user.email,
-                    profile_pic_url: user.profile_pic_url
+                    profile_pic_url: user.profile_pic_url,
                 })
                 .from(user)
                 .where(d.eq(user.nik, nik));
@@ -82,11 +78,10 @@ export default async function route(fastify: FastifyInstance) {
                 await db
                     .update(user)
                     .set({
-                        name: name,
                         alamat: address,
                         phone_number: phone_number,
                         email: email,
-                        profile_pic_url: profile_pic_url
+                        profile_pic_url: profile_pic_url,
                     })
                     .where(d.eq(user.nik, nik));
             }
@@ -94,7 +89,6 @@ export default async function route(fastify: FastifyInstance) {
             return {
                 message: "success",
                 result: {
-                    name: name ?? userProfile[0].name,
                     nik: userProfile[0].nik,
                     birth_date: dayjs(userProfile[0].birth_date).format("YYYY-MM-DD"),
                     address: address ?? null,
