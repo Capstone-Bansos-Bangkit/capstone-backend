@@ -3,7 +3,7 @@ import { FastifyInstance } from "fastify";
 import * as d from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import { db } from "@db/database";
-import { bansos_provider, bansos_event, user_submission} from "@db/schema";
+import { bansos_provider, bansos_event, user_submission } from "@db/schema";
 
 import { z } from "zod";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
@@ -12,11 +12,10 @@ const responseSchema = z.object({
     message: z.string().default("success").optional(),
     result: z.array(
         z.object({
+            id: z.number(),
             name: z.string().nullish(),
             description: z.string().nullish(),
             logo_url: z.string().nullish(),
-            periode: z.string().nullish(),
-            status: z.string().nullish(),
         })
     ),
 });
@@ -39,16 +38,13 @@ export default async function route(fastify: FastifyInstance) {
         },
         handler: async (request, reply) => {
             const jenis_bansos = await db
-                .select({ 
+                .select({
+                    id: bansos_provider.id,
                     name: bansos_provider.name,
                     description: bansos_provider.description,
-                    logo_url: bansos_provider.logo_url, 
-                    periode: sql<string>`to_char(${bansos_event.start_date}, 'Mon YYYY')`,
-                    status: user_submission.status,
+                    logo_url: bansos_provider.logo_url,
                 })
-                .from(bansos_provider)
-                .leftJoin(bansos_event, d.eq(bansos_event.bansos_provider_id, bansos_provider.id))
-                .leftJoin(user_submission, d.eq(user_submission.bansos_event_id, bansos_event.id));
+                .from(bansos_provider);
 
             return {
                 message: "success",
