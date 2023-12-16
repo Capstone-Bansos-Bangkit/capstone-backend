@@ -15,7 +15,7 @@ List Kebutuhan Endpoint Page User:
     - PUT /submission/answer [NOT READY]
     - GET /questioner
     - POST /attachment
-    - PUT /submission/<submission_id>/submit [NOT READY]
+    - PUT /attachment/<submission_id>/submit [NOT READY]
   - Profile Screen:
     - GET /user/profile [NOT READY]
     - PUT /user/profile [NOT READY]
@@ -55,8 +55,6 @@ Notes BE Page User:
     - tambah url foto profil
   - GET /submission/latest_status
     - implement
-    - request:
-      - bansos_provider_id: int
     - response:
       - submission_id: string (ambil yg latest)
       - name: string
@@ -78,6 +76,8 @@ Notes BE Page User:
 Notes BE Page Admin:
   - GET /bansos
     - tambah total periode dan total penerima
+    - total penerima diambil dari total penerima semua periode
+    - tambah alias 
   - GET /admin/submission/summary
     - implement
     - param kosong
@@ -92,9 +92,10 @@ Notes BE Page Admin:
     - implement
     - order by date desc
     - param:
-      - page: int
+      - offset: int
       - limit: int
-      - status: string (all, eligible, not eligible)
+      - status: string (all, eligible, not eligible) (default all)
+      - bansos_provider_id: int (opsional)
     - response:
       - total: int
       - data: array
