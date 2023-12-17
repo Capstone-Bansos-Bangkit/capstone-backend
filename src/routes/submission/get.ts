@@ -85,22 +85,25 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
                 .innerJoin(bansos_event, d.eq(bansos_event.id, user_submission.bansos_event_id))
                 .innerJoin(bansos_provider, d.eq(bansos_provider.id, bansos_event.bansos_provider_id));
 
-            query = query.where(d.eq(user_submission.nik, request.user.nik));
-            queryCount = queryCount.where(d.eq(user_submission.nik, request.user.nik));
+            const whereFilters: d.SQL[] = [];
 
-            if (request.query.bansos_provider_id) {
-                query = query.where(d.eq(bansos_provider.id, request.query.bansos_provider_id));
-                queryCount = queryCount.where(d.eq(bansos_provider.id, request.query.bansos_provider_id));
+            whereFilters.push(d.eq(user_submission.nik, request.user.nik));
+
+            if (request.query.bansos_provider_id !== undefined) {
+                whereFilters.push(d.eq(bansos_provider.id, request.query.bansos_provider_id));
             }
 
-            if (request.query.bansos_event_id) {
-                query = query.where(d.eq(user_submission.bansos_event_id, request.query.bansos_event_id));
-                queryCount = queryCount.where(d.eq(user_submission.bansos_event_id, request.query.bansos_event_id));
+            if (request.query.bansos_event_id !== undefined) {
+                whereFilters.push(d.eq(user_submission.bansos_event_id, request.query.bansos_event_id));
             }
 
-            if (request.query.status) {
-                query = query.where(d.eq(user_submission.status, request.query.status));
-                queryCount = queryCount.where(d.eq(user_submission.status, request.query.status));
+            if (request.query.status !== undefined) {
+                whereFilters.push(d.eq(user_submission.status, request.query.status));
+            }
+
+            if (whereFilters.length > 0) {
+                query = query.where(d.and(...whereFilters));
+                queryCount = queryCount.where(d.and(...whereFilters));
             }
 
             query = query.limit(request.query.limit).offset(request.query.offset).orderBy(d.desc(user_submission.created_at));
