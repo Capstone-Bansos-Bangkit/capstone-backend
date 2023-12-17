@@ -274,6 +274,13 @@
       "when": 1702801653817,
       "tag": "0038_right_amphibian",
       "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "5",
+      "when": 1702802615387,
+      "tag": "0039_mixed_millenium_guard",
+      "breakpoints": true
     }
   ]
 }

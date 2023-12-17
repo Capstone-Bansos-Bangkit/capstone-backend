@@ -30,7 +30,6 @@ export const bansos_event = pgTable('bansos_event', {
     id: serial('id').primaryKey(),
     bansos_provider_id: integer('bansos_provider_id').references(() => bansos_provider.id),
     name: text('name'),
-    alias: text('alias'),
     start_date: date('start_date'),
     end_date: date('end_date'),
     created_at: timestamp('created_at').defaultNow(),
@@ -39,6 +38,7 @@ export const bansos_event = pgTable('bansos_event', {
 export const bansos_provider = pgTable('bansos_provider', {
     id: serial('id').primaryKey(),
     name: text('name'),
+    alias: text('alias'),
     description: text('description'),
     logo_url: text('logo_url'),
 })
