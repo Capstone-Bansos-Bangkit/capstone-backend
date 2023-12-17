@@ -36,10 +36,6 @@ export default async function route(fastify: FastifyInstance) {
             ],
         },
         handler: async (request, reply) => {
-            if (request.user.role !== "admin") {
-                return reply.forbidden("Access denied");
-            }
-
             let periode = db
                 .select({
                     periode: sql<string>`to_char(${bansos_event.start_date}, 'Mon YYYY')`,
@@ -49,8 +45,7 @@ export default async function route(fastify: FastifyInstance) {
                 .$dynamic();
 
             if (request.query.bansos_provider_id) {
-                periode = periode
-                .where(d.eq(bansos_event.bansos_provider_id, request.query.bansos_provider_id));
+                periode = periode.where(d.eq(bansos_event.bansos_provider_id, request.query.bansos_provider_id));
             }
 
             const list = await periode;
