@@ -5,20 +5,20 @@ List Kebutuhan Endpoint Page User:
     - GET /bansos
   - Cek Bansos:
     - GET /bansos (list jenis bansos)
-    - GET /user/profile [NOT READY]
-    - GET /submission/latest_status (status pengajuan) [NOT READY]
+    - GET /user/profile
+    - GET /submission/latest_status (status pengajuan)
   - Pengajuan Bansos:
     - GET /bansos (list jenis bansos)
-    - GET /user/profile [NOT READY]
-    - GET /submission/latest_status (status pengajuan) [NOT READY]
-    - POST /submission (hit ketika user milih jenis bansos) [NOT READY]
-    - PUT /submission/answer [NOT READY]
+    - GET /user/profile
+    - GET /submission/latest_status (status pengajuan)
+    - POST /submission (hit ketika user milih jenis bansos)
+    - PUT /submission/answer
     - GET /questioner
     - POST /attachment
-    - PUT /attachment/<submission_id>/submit [NOT READY]
+    - PUT /attachment/<submission_id>/submit
   - Profile Screen:
-    - GET /user/profile [NOT READY]
-    - PUT /user/profile [NOT READY]
+    - GET /user/profile
+    - PUT /user/profile
     - POST /attachment (upload image, ambil url dari responsenya, hit API PUT /user/profile)
 
 List Kebutuhan Endpoint Page Admin:
@@ -33,13 +33,13 @@ List Kebutuhan Endpoint Page Admin:
     - GET /admin/submission/detail/<submission_id> [NOT READY]
   - Bansos:
     - Page Home & Data Bantuan Sosial: 
-      - GET /bansos (list jenis bansos) [NOT READY]
+      - GET /bansos (list jenis bansos)
     - Page Daftar Penerima:
       - GET /bansos/event (list periode/event bansos)
-      - GET /wilayah/provinsi [NOT READY]
-      - GET /wilayah/kabupaten [NOT READY]
-      - GET /wilayah/kecamatan [NOT READY]
-      - GET /wilayah/desa [NOT READY]
+      - GET /wilayah/provinsi
+      - GET /wilayah/kabupaten
+      - GET /wilayah/kecamatan
+      - GET /wilayah/desa
       - GET /admin/submission/list [NOT READY]
     - Page Penyaluran:
       - Nunggu mockup
