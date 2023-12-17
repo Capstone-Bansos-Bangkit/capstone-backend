@@ -9,14 +9,9 @@ import { ZodTypeProvider } from "fastify-type-provider-zod";
 
 // Request and Response schema
 const postRequestSchema = z.object({
-    nik: z.string().optional(),
     bansos_provider_id: z.coerce.number().optional(),
     bansos_event_id: z.coerce.number().optional(),
     status: z.string().optional(),
-    provinsi: z.string().optional().describe("belum ready"),
-    kabupaten: z.string().optional().describe("belum ready"),
-    kecamatan: z.string().optional().describe("belum ready"),
-    kelurahan: z.string().optional().describe("belum ready"),
     limit: z.coerce.number().max(100).optional().default(10),
     offset: z.coerce.number().optional().default(0),
 });
@@ -46,7 +41,7 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
         onRequest: [fastify.authenticate],
         schema: {
             tags: ["submission"],
-            description: "get user submission list",
+            description: "(USER ONLY) get user submission list",
             querystring: postRequestSchema,
             response: {
                 "2xx": postResponseSchema,
@@ -58,11 +53,8 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
             ],
         },
         handler: async (request, reply) => {
-            if (request.user.role !== "admin") {
-                if (request.query.nik !== request.user.nik) {
-                    reply.forbidden("Non-admin user can only access their own submission. Make sure your NIK is correct");
-                    return;
-                }
+            if (request.user.role == "admin") {
+                reply.unauthorized("Admin is not allowed to access this route");
             }
 
             let query = db
@@ -93,10 +85,8 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
                 .innerJoin(bansos_event, d.eq(bansos_event.id, user_submission.bansos_event_id))
                 .innerJoin(bansos_provider, d.eq(bansos_provider.id, bansos_event.bansos_provider_id));
 
-            if (request.query.nik) {
-                query = query.where(d.eq(user_submission.nik, request.query.nik));
-                queryCount = queryCount.where(d.eq(user_submission.nik, request.query.nik));
-            }
+            query = query.where(d.eq(user_submission.nik, request.user.nik));
+            queryCount = queryCount.where(d.eq(user_submission.nik, request.user.nik));
 
             if (request.query.bansos_provider_id) {
                 query = query.where(d.eq(bansos_provider.id, request.query.bansos_provider_id));
