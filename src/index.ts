@@ -74,7 +74,7 @@ async function main() {
             info: {
                 title: "Capstone REST API",
                 description: "Capstone Project API",
-                version: "0.2.3",
+                version: "0.3.1",
             },
             servers: [],
             components: {
@@ -91,6 +91,7 @@ async function main() {
                 { name: "user", description: "User related API" },
                 { name: "submission", description: "Submission related API" },
                 { name: "attachment", description: "Upload berbagai macam file" },
+                { name: "admin", description: "API untuk admin" },
             ],
         },
         //transform: jsonSchemaTransform,
