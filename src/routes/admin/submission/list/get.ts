@@ -77,7 +77,7 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
         },
         handler: async (request, reply) => {
             if (request.user.role !== "admin") {
-                reply.forbidden("Non-admin user can only access their own submission. Make sure your NIK is correct");
+                reply.forbidden("Access denied");
                 return;
             }
 
