@@ -267,6 +267,13 @@
       "when": 1702628311886,
       "tag": "0037_glossy_lady_ursula",
       "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "5",
+      "when": 1702801653817,
+      "tag": "0038_right_amphibian",
+      "breakpoints": true
     }
   ]
 }
