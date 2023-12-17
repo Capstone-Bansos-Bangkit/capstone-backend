@@ -7,19 +7,6 @@ import { user } from "@db/schema";
 import { z } from "zod";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 
-/* 
-  - GET /admin/submission/summary
-    - implement
-    - param kosong
-    - response:
-      - total_keluarga_all: eligible + not eligible
-      - total_keluarga_eligible: eligible
-      - total_keluarga_not_eligible: not eligible
-      - per_bansos: array
-        - nama_bansos: string
-        - total_eligible: int
-*/
-
 // Request and Response schema
 const responseSchema = z.object({
     message: z.string().default("success").optional(),
@@ -40,6 +27,7 @@ export default async function route(fastify: FastifyInstance) {
     fastify.withTypeProvider<ZodTypeProvider>().route({
         method: "GET",
         url: "/admin/submission/summary",
+        onRequest: [fastify.authenticate],
         schema: {
             tags: ["admin"],
             description: "submission summary",
@@ -47,8 +35,17 @@ export default async function route(fastify: FastifyInstance) {
             response: {
                 "2xx": responseSchema,
             },
+            security: [
+                {
+                    Bearer: [],
+                },
+            ],
         },
         handler: async (request, reply) => {
+            if (request.user.role !== "admin") {
+                return reply.forbidden("Access denied");
+            }
+
             type PerBansos = {
                 bansos_name: string;
                 total_eligible: number;
