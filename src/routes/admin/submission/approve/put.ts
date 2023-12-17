@@ -11,14 +11,14 @@ import { ZodTypeProvider } from "fastify-type-provider-zod";
 // Request and Response schema
 const requestSchema = z.object({
     user_submission_id: z.coerce.number(),
-    status: z.enum(["accept", "reject"]),
+    status: z.enum(["approved", "rejected"]),
 });
 const responseSchema = z.object({
     message: z.string().default("success").optional(),
     result: z.object({
         nik: z.string().nullish(),
         bansos_event: z.string().nullish(),
-        status: z.enum(["accept", "reject"]),
+        status: z.enum(["approved", "rejected"]),
     }),
 });
 
