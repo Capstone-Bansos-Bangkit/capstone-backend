@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 
 import * as d from "drizzle-orm";
 import { db } from "@db/database";
-import { bansos_provider, bansos_event, user_submission} from "@db/schema";
+import { bansos_provider, bansos_event, user_submission } from "@db/schema";
 
 import { z } from "zod";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
@@ -38,13 +38,13 @@ export default async function route(fastify: FastifyInstance) {
                 },
             ],
         },
-        handler: async (request, reply) => {                
+        handler: async (request, reply) => {
             const jenis_bansos = await db
-                .select({ 
+                .select({
                     name: bansos_provider.name,
                     description: bansos_provider.description,
-                    logo_url: bansos_provider.logo_url, 
-                    alias: bansos_provider.alias,   
+                    logo_url: bansos_provider.logo_url,
+                    alias: bansos_provider.alias,
                     total_periode: d.countDistinct(bansos_event.id).as("total_periode"),
                     total_penerima: d.count(user_submission.status).as("total_penerima"),
                 })
@@ -52,7 +52,7 @@ export default async function route(fastify: FastifyInstance) {
                 .leftJoin(bansos_event, d.eq(bansos_event.bansos_provider_id, bansos_provider.id))
                 .leftJoin(user_submission, d.and(d.eq(user_submission.bansos_event_id, bansos_event.id), d.eq(user_submission.status, "accept")))
                 .groupBy(bansos_provider.id);
-                
+
             return {
                 message: "success",
                 result: jenis_bansos,

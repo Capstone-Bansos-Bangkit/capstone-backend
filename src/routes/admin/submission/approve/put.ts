@@ -11,25 +11,25 @@ import { ZodTypeProvider } from "fastify-type-provider-zod";
 // Request and Response schema
 const requestSchema = z.object({
     user_submission_id: z.coerce.number(),
-    status: z.enum(["accept", "reject"]),
+    status: z.enum(["approved", "rejected"]),
 });
 const responseSchema = z.object({
     message: z.string().default("success").optional(),
     result: z.object({
         nik: z.string().nullish(),
         bansos_event: z.string().nullish(),
-        status: z.enum(["accept", "reject"]),
+        status: z.enum(["approved", "rejected"]),
     }),
 });
 
 export default async function route(fastify: FastifyInstance) {
     fastify.withTypeProvider<ZodTypeProvider>().route({
         method: "PUT",
-        url: "/submission",
+        url: "/admin/submission/approve",
         onRequest: [fastify.authenticate],
         schema: {
-            tags: ["submission"],
-            description: "put status submission",
+            tags: ["admin"],
+            description: "Approve user submission",
             querystring: requestSchema,
             response: {
                 "2xx": responseSchema,
@@ -43,9 +43,9 @@ export default async function route(fastify: FastifyInstance) {
         handler: async (request, reply) => {
             const user_submission_id = request.query.user_submission_id;
             const status = request.query.status;
-            
+
             if (request.user.role !== "admin") {
-                return reply.forbidden("Access denied")
+                return reply.forbidden("Access denied");
             }
 
             const user_approval = await db
@@ -57,11 +57,11 @@ export default async function route(fastify: FastifyInstance) {
                 .from(user_submission)
                 .where(d.eq(user_submission.id, user_submission_id))
                 .innerJoin(bansos_event, d.eq(user_submission.bansos_event_id, bansos_event.id));
-            
+
             if (user_approval.length === 0) {
-                    reply.notFound("id user_submission not found");
-                    return;
-                }
+                reply.notFound("id user_submission not found");
+                return;
+            }
 
             await db
                 .update(user_submission)
@@ -71,7 +71,7 @@ export default async function route(fastify: FastifyInstance) {
                 .where(d.eq(user_submission.id, user_submission_id));
 
             return {
-                message: "succes",
+                message: "success",
                 result: {
                     nik: user_approval[0].nik,
                     bansos_event: user_approval[0].bansos_event,
