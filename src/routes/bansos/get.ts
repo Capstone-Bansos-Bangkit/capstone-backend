@@ -12,6 +12,7 @@ const responseSchema = z.object({
     result: z.array(
         z.object({
             name: z.string().nullish(),
+            bansos_provider_id: z.number().nullish(),
             description: z.string().nullish(),
             logo_url: z.string().nullish(),
             alias: z.string().nullish(),
@@ -42,6 +43,7 @@ export default async function route(fastify: FastifyInstance) {
             const jenis_bansos = await db
                 .select({
                     name: bansos_provider.name,
+                    bansos_provider_id: bansos_provider.id,
                     description: bansos_provider.description,
                     logo_url: bansos_provider.logo_url,
                     alias: bansos_provider.alias,
