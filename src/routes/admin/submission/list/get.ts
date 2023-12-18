@@ -36,17 +36,19 @@ const postResponseSchema = z.object({
     message: z.string().default("success").optional(),
     result: z.array(
         z.object({
-            id: z.number(),
+            submission_id: z.number(),
             nik: z.string(),
             name: z.string(),
+            alamat: z.string().nullable(),
 
             desa: z.string().nullable(),
-            provinsi: z.string().nullable(),
-            kabupaten: z.string().nullable(),
-            kecamatan: z.string().nullable(),
+            prov: z.string().nullable(),
+            kab: z.string().nullable(),
+            kec: z.string().nullable(),
 
             bansos_provider_id: z.number(),
             bansos_provider_name: z.string().nullable(),
+            bansos_provider_alias: z.string().nullable(),
             bansos_event_id: z.number(),
             bansos_event_periode: z.string(),
 
@@ -83,17 +85,20 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
 
             let query = db
                 .select({
-                    id: user_submission.id,
+                    submission_id: user_submission.id,
+
                     nik: user.nik,
                     name: user.name,
+                    alamat: user.alamat,
 
                     desa: wilayah_desa.name,
-                    kecamatan: wilayah_kecamatan.name,
-                    kabupaten: wilayah_kabupaten.name,
-                    provinsi: wilayah_provinsi.name,
+                    kec: wilayah_kecamatan.name,
+                    kab: wilayah_kabupaten.name,
+                    prov: wilayah_provinsi.name,
 
                     bansos_provider_id: bansos_provider.id,
                     bansos_provider_name: bansos_provider.name,
+                    bansos_provider_alias: bansos_provider.alias,
                     bansos_event_id: bansos_event.id,
                     bansos_event_periode: sql<string>`to_char(${bansos_event.start_date}, 'Mon YYYY')`,
 

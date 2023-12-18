@@ -48,6 +48,7 @@ export const user_submission = pgTable('user_submission', {
     nik: text('nik').references(() => user.nik),
     bansos_event_id: integer('bansos_event_id').references(() => bansos_event.id),
     status: text('status'), // unsubmitted, pending, rejected, approved
+    ml_result: boolean('ml_result'), 
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp('updated_at').defaultNow(),
 });
