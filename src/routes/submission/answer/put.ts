@@ -95,7 +95,7 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
                 if (!choices_values.includes(choice_value)) {
                     return reply.notFound("Invalid choice value! Valid choice values: " + choices_values.join(", "));
                 }
-            } else if (questionEntry.type == "file") {
+            } else if (questionEntry.type == "image") {
                 const file_id = parseInt(answer);
                 const files = await db
                     .select({
