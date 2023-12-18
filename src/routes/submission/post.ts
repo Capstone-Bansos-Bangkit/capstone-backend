@@ -62,13 +62,26 @@ export default async function route(fastify: FastifyInstance, _opts: any, done: 
             }
 
             const existingSubmission = await db
-                .select({ nik: user_submission.nik })
+                .select({
+                    id: user_submission.id,
+                    nik: user_submission.nik,
+                    bansos_event_id: user_submission.bansos_event_id,
+                    status: user_submission.status,
+                })
                 .from(user_submission)
                 .where(d.and(d.eq(user_submission.nik, request.user.nik), d.eq(user_submission.bansos_event_id, bansosEvent[0].id)));
 
             if (existingSubmission.length > 0) {
-                reply.badRequest("Submission already exists");
-                return;
+                return reply.send({
+                    message: "submission already exist",
+                    result: {
+                        submission_id: existingSubmission[0].id,
+                        nik: existingSubmission[0].nik,
+                        bansos_name: bansosEvent[0].bansos_name,
+                        bansos_event_id: existingSubmission[0].bansos_event_id,
+                        status: existingSubmission[0].status,
+                    },
+                });
             }
 
             const inserted = await db
