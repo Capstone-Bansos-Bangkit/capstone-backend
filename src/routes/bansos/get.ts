@@ -50,7 +50,7 @@ export default async function route(fastify: FastifyInstance) {
                 })
                 .from(bansos_provider)
                 .leftJoin(bansos_event, d.eq(bansos_event.bansos_provider_id, bansos_provider.id))
-                .leftJoin(user_submission, d.and(d.eq(user_submission.bansos_event_id, bansos_event.id), d.eq(user_submission.status, "accept")))
+                .leftJoin(user_submission, d.and(d.eq(user_submission.bansos_event_id, bansos_event.id), d.eq(user_submission.status, "approved")))
                 .groupBy(bansos_provider.id);
 
             return {

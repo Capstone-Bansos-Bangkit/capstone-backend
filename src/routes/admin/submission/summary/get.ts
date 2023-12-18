@@ -61,7 +61,7 @@ export default async function route(fastify: FastifyInstance) {
                 with eligible_count as (
                     select count(distinct no_kk) as eligible from user_submission us
                     join users u on u.nik = us.nik 
-                    where status = 'accept'
+                    where status = 'approved'
                 ), total_count as (
                     select count(distinct no_kk) as "all" from users
                 ), summary as (
@@ -70,7 +70,7 @@ export default async function route(fastify: FastifyInstance) {
                     select be.bansos_provider_id, count(distinct no_kk) as eligible from user_submission us
                     join users u on u.nik = us.nik 
                     join bansos_event be ON be.id = us.bansos_event_id 
-                    where status = 'accept'
+                    where status = 'approved'
                     group by 1
                 ), per_bansos_json as (
                     select 
