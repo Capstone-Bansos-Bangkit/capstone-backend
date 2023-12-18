@@ -65,7 +65,7 @@ export default async function route(fastify: FastifyInstance) {
                 })
                 .returning();
 
-            const fullUrl = `https://storage.cloud.google.com/genius-aid/${cloudPath}`;
+            const fullUrl = `https://storage.googleapis.com/genius-aid/${cloudPath}`;
 
             return {
                 message: "success",
