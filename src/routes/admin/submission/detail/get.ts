@@ -36,13 +36,13 @@ const responseSchema = z.object({
         questioner_result: z.array(
             z.object({
                 question: z.string(),
-                answer: z.string(),
+                answer: z.string().nullish(),
             })
         ),
         attachment_result: z.array(
             z.object({
                 question: z.string(),
-                answer: z.string(),
+                answer: z.string().nullish(),
             })
         ),
     }),
@@ -68,12 +68,12 @@ type SubmissionDetail = {
 
     questioner_result: {
         question: string;
-        answer: string;
+        answer: string | null;
     }[];
 
     attachment_result: {
         question: string;
-        answer: string;
+        answer: string | null;
     }[];
 };
 
@@ -113,7 +113,7 @@ export default async function route(fastify: FastifyInstance) {
                     'text' as answer_type,
                     qc.alias as answer
                 from answer_choice_1 a1
-                join question_choice qc on qc.question_id = a1.id and qc.value = a1.answer::int
+                left join question_choice qc on qc.question_id = a1.id and qc.value = a1.answer::int
             ), answer_cont as (
                 select 
                     q.question, 
@@ -172,6 +172,8 @@ export default async function route(fastify: FastifyInstance) {
             if (userSubmissionDetail.length == 0) {
                 return reply.notFound("Submission not found");
             }
+
+            console.log(userSubmissionDetail[0]);
 
             return {
                 message: "success",

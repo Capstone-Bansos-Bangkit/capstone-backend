@@ -7,6 +7,6 @@ dotenv.config();
 export let db: ReturnType<typeof drizzle> = undefined as any;
 
 export async function initDatabase() {
-    const queryClient = postgres(process.env.DATABASE_URL as string);
+    const queryClient = postgres(process.env.DATABASE_URL as string, { max: 64 });
     db = drizzle(queryClient);
 }
