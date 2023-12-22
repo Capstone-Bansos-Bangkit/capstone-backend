@@ -173,7 +173,9 @@ export default async function route(fastify: FastifyInstance) {
                 return reply.notFound("Submission not found");
             }
 
-            console.log(userSubmissionDetail[0]);
+            if (userSubmissionDetail[0].attachment_result == null) {
+                userSubmissionDetail[0].attachment_result = [];
+            }
 
             return {
                 message: "success",
